@@ -173,18 +173,6 @@ const CameraPreview: React.FC<CameraPreviewProps> = () => {
             : "Tela permanecerá ligada enquanto esta página estiver aberta."}
         </span>
       </div>
-      {photoSrc && (
-        <div className="pt-4 flex flex-col items-center">
-          <img src={photoSrc} alt="Captura" className="max-w-[300px] rounded-lg shadow" />
-          <a
-            className="mt-2 px-4 py-2 bg-emerald-700 text-white text-sm font-semibold rounded-lg hover:bg-emerald-800 transition"
-            href={photoSrc}
-            download={"captura.jpg"}
-          >
-            Baixar foto
-          </a>
-        </div>
-      )}
     </div>
   );
 };
