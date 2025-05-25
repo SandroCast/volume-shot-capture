@@ -1,4 +1,3 @@
-
 import React, { useEffect, useRef, useState } from "react";
 import { Camera } from "lucide-react";
 
@@ -89,7 +88,7 @@ const CameraPreview: React.FC<CameraPreviewProps> = () => {
     };
   }, []);
 
-  // Handler para tirar a foto
+  // Handler para tirar a foto E já baixar automaticamente
   const handleCapture = () => {
     const video = videoRef.current;
     const canvas = canvasRef.current;
@@ -99,7 +98,16 @@ const CameraPreview: React.FC<CameraPreviewProps> = () => {
       const ctx = canvas.getContext("2d");
       if (ctx) {
         ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
-        setPhotoSrc(canvas.toDataURL("image/jpeg", 0.96));
+        const dataUrl = canvas.toDataURL("image/jpeg", 0.96);
+        setPhotoSrc(dataUrl);
+
+        // Download automático ao capturar
+        const a = document.createElement("a");
+        a.href = dataUrl;
+        a.download = "captura.jpg";
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
       }
     }
   };
