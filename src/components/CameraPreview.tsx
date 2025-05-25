@@ -88,7 +88,7 @@ const CameraPreview: React.FC<CameraPreviewProps> = () => {
     };
   }, []);
 
-  // Handler para tirar a foto E já baixar automaticamente
+  // Handler para tirar a foto E já baixar automaticamente, nomeando o arquivo com data/hora
   const handleCapture = () => {
     const video = videoRef.current;
     const canvas = canvasRef.current;
@@ -99,12 +99,22 @@ const CameraPreview: React.FC<CameraPreviewProps> = () => {
       if (ctx) {
         ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
         const dataUrl = canvas.toDataURL("image/jpeg", 0.96);
-        setPhotoSrc(dataUrl);
 
-        // Download automático ao capturar
+        // Gerar timestamp para nome do arquivo
+        const now = new Date();
+        const pad = (num: number) => String(num).padStart(2, "0");
+        const day = pad(now.getDate());
+        const month = pad(now.getMonth() + 1);
+        const year = now.getFullYear();
+        const hour = pad(now.getHours());
+        const minute = pad(now.getMinutes());
+        const second = pad(now.getSeconds());
+        const filename = `captura-${day}${month}${year}${hour}${minute}${second}.jpg`;
+
+        // Download automático ao capturar, nome único
         const a = document.createElement("a");
         a.href = dataUrl;
-        a.download = "captura.jpg";
+        a.download = filename;
         document.body.appendChild(a);
         a.click();
         document.body.removeChild(a);
