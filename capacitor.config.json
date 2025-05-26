@@ -1,0 +1,11 @@
+
+{
+  "appId": "app.lovable.e0fbfbe34d874d3c96ea9e94fb10e514",
+  "appName": "volume-shot-capture",
+  "webDir": "dist",
+  "bundledWebRuntime": false,
+  "server": {
+    "url": "https://e0fbfbe3-4d87-4d3c-96ea-9e94fb10e514.lovableproject.com?forceHideBadge=true",
+    "cleartext": true
+  }
+}
