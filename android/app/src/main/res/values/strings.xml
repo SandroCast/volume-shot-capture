@@ -1,0 +1,7 @@
+<?xml version='1.0' encoding='utf-8'?>
+<resources>
+    <string name="app_name">volume-shot-capture</string>
+    <string name="title_activity_main">volume-shot-capture</string>
+    <string name="package_name">app.lovable.e0fbfbe34d874d3c96ea9e94fb10e514</string>
+    <string name="custom_url_scheme">app.lovable.e0fbfbe34d874d3c96ea9e94fb10e514</string>
+</resources>
