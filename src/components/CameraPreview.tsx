@@ -1,5 +1,7 @@
+
 import React, { useEffect, useRef, useState } from "react";
 import { Camera } from "lucide-react";
+import { Capacitor } from "@capacitor/core";
 
 interface CameraPreviewProps {}
 
@@ -11,6 +13,12 @@ const CameraPreview: React.FC<CameraPreviewProps> = () => {
   const [selectedDeviceId, setSelectedDeviceId] = useState<string | null>(null);
   const [wakeLock, setWakeLock] = useState<any>(null);
   const streamRef = useRef<MediaStream | null>(null);
+  const [isNative, setIsNative] = useState<boolean>(false);
+
+  // Detecta ambiente Capacitor
+  useEffect(() => {
+    setIsNative(Capacitor.isNativePlatform());
+  }, []);
 
   // Solicita câmeras disponíveis
   useEffect(() => {
@@ -124,14 +132,19 @@ const CameraPreview: React.FC<CameraPreviewProps> = () => {
 
   // Suporte para botão físico de volume +
   useEffect(() => {
+    if (isNative) {
+      // Recomendação: criar/instalar plugin nativo para escutar eventos de hardware volume
+      // Por padrão, browser não permite escutar botão volume em JS puro no app nativo.
+      // Exemplo para integração futura:
+      // window.addEventListener("VolumeUpButtonPressed", handleCapture);
+      // [Aqui deve instalar e configurar plugin Capacitor custom da sua escolha]
+      return;
+    }
     function onVolumeKey(event: KeyboardEvent) {
-      // Detecção de botão de volume (código geralmente 175/AudioVolumeUp em Android-Chrome, pode variar)
-      // No navegador mobile, access de volume+ é capturado como "volumeup" nas key events se permissão/hardware permitir.
-      // Mas em mobile browsers, geralmente não é possível. Para PWA install pode funcionar. Então, fallback para "+" do teclado.
       if (
         event.code === "AudioVolumeUp" ||
         event.key === "+" ||
-        event.key === "Add" // fallback teclado físico
+        event.key === "Add"
       ) {
         event.preventDefault();
         handleCapture();
@@ -139,7 +152,7 @@ const CameraPreview: React.FC<CameraPreviewProps> = () => {
     }
     window.addEventListener("keydown", onVolumeKey);
     return () => window.removeEventListener("keydown", onVolumeKey);
-  });
+  }, [isNative]);
 
   return (
     <div className="flex flex-col items-center justify-center min-h-[60vh] w-full gap-4">
@@ -177,11 +190,18 @@ const CameraPreview: React.FC<CameraPreviewProps> = () => {
       </div>
       <div className="text-xs text-gray-400 w-full text-center">
         Toque volume <b>+</b> para tirar a foto<br />
-        <span>
-          {wakeLock === null
-            ? "⚠️ Não foi possível manter a tela ligada neste navegador."
-            : "Tela permanecerá ligada enquanto esta página estiver aberta."}
-        </span>
+        {isNative
+          ? <span>
+              ⚠️ O botão físico de volume só funcionará se for integrado via plugin nativo Capacitor.<br />
+              Para suporte real, instale <b>um plugin nativo que captura eventos de hardware de volume</b>. Navegue até <a href="https://github.com/charlesstover/capacitor-keyboard-shortcuts" target="_blank" rel="noopener noreferrer" className="underline">veja sugestão aqui</a>.<br/>
+              Ou <b>use o botão dentro do app</b> normalmente.
+            </span>
+          : <span>
+              {wakeLock === null
+                ? "⚠️ Não foi possível manter a tela ligada neste navegador."
+                : "Tela permanecerá ligada enquanto esta página estiver aberta."}
+            </span>
+        }
       </div>
     </div>
   );
