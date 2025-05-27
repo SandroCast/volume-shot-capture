@@ -3,27 +3,20 @@ import CameraPreview from "@/components/CameraPreview";
 import { ChevronLeft } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { useEffect } from "react";
-
-// NOVO: Importa plugin Permissions do Capacitor
-import { Plugins } from "@capacitor/core";
+// Import Camera plugin from Capacitor
+import { Camera } from "@capacitor/camera";
 
 const CameraCapture = () => {
   const nav = useNavigate();
 
   useEffect(() => {
-    // Pedir permissão da câmera ao abrir a tela
+    // Pedir permissão da câmera ao abrir a tela (usando Capacitor Camera)
     async function requestCameraPermission() {
-      // Para Android: solicita permissão de CÂMERA
-      if ("android" in navigator) {
-        try {
-          // Utiliza Permissions API do Capacitor
-          // @ts-ignore
-          const { Permissions } = Plugins;
-          // Solicita permissão CAMERA
-          await Permissions.request({ name: "camera" });
-        } catch (e) {
-          // Pode mostrar ao usuário erro específico se desejar
-        }
+      try {
+        await Camera.requestPermissions();
+      } catch (e) {
+        // Pode mostrar ao usuário erro específico se desejar
+        console.error("Erro ao solicitar permissão da câmera:", e);
       }
     }
     requestCameraPermission();
